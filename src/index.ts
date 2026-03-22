@@ -3,6 +3,9 @@ import config from '~/config/config';
 import app from './app';
 import initialData from '~/config/initialData';
 import logger from '~/config/logger';
+import cron from 'node-cron';
+import https from 'https';
+import http from 'http';
 
 let server: import('http').Server | undefined;
 
@@ -47,8 +50,28 @@ const connect = async (): Promise<void> => {
 				logger.info('| $$       /$$__  $$|  $$ /$$/ /$$__  $$ /$$__  $$|____  $$');
 				logger.info('| $$      | $$$$$$$$ \\  $$$$/ | $$  \\ $$| $$  \\__/ /$$$$$$$');
 				logger.info('| $$      | $$_____/  >$$  $$ | $$  | $$| $$      /$$__  $$');
-				logger.info('| $$$$$$$$|  $$$$$$$ /$$/\\  $$|  $$$$$$/| $$     |  $$$$$$$');
+				logger.info('|$$$$$$$$|  $$$$$$$ /$$/\\  $$|  $$$$$$/| $$     |  $$$$$$$');
 				logger.info('|________/ \\_______/|__/  \\__/ \\______/ |__/      \\_______/');
+			});
+
+			const pingUrl = process.env.PING_URL || process.env.RENDER_EXTERNAL_URL || `http://${config.HOST}:${config.PORT}`;
+			
+			// Ping the server every 14 minutes to prevent Render from sleeping
+			cron.schedule('*/14 * * * *', () => {
+				logger.info(`Pinging ${pingUrl} to prevent Render sleep...`);
+				if (pingUrl.startsWith('https')) {
+					https.get(pingUrl, (res) => {
+						logger.info(`Ping response: ${res.statusCode}`);
+					}).on('error', (err) => {
+						logger.error(`Ping error: ${err.message}`);
+					});
+				} else {
+					http.get(pingUrl, (res) => {
+						logger.info(`Ping response: ${res.statusCode}`);
+					}).on('error', (err) => {
+						logger.error(`Ping error: ${err.message}`);
+					});
+				}
 			});
 		}
 	} catch (err) {

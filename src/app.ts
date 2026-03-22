@@ -3,6 +3,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import swaggerUi from 'swagger-ui-express';
 import passport from '~/config/passport';
 import routes from '~/routes/v1';
 import error from '~/middlewares/error';
@@ -10,6 +11,7 @@ import rateLimiter from '~/middlewares/rateLimiter';
 import requestId from '~/middlewares/requestId';
 import config from '~/config/config';
 import morgan from '~/config/morgan';
+import swaggerSpec from '~/config/swagger';
 
 const app = express();
 
@@ -45,7 +47,10 @@ app.use(
 app.use(rateLimiter);
 app.use(passport.initialize());
 app.use(express.static('public'));
+
 app.use('/api/v1', routes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(error.converter);
 app.use(error.notFound);
 app.use(error.handler);

@@ -10,6 +10,123 @@ import config from '~/config/config';
 
 const router = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/signup:
+ *   post:
+ *     summary: Register as user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: must be unique
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 description: At least one number and one letter
+ *             example:
+ *               name: fake name
+ *               email: fake@example.com
+ *               password: password1
+ *     responses:
+ *       "201":
+ *         description: Created
+ *       "400":
+ *         description: Bad Request
+ *
+ * /api/v1/auth/signin:
+ *   post:
+ *     summary: Login
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *             example:
+ *               email: fake@example.com
+ *               password: password1
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Incorrect email or password
+ * 
+ * /api/v1/auth/signout:
+ *   post:
+ *     summary: Logout
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       "204":
+ *         description: No content
+ *       "404":
+ *         description: Not found
+ * 
+ * /api/v1/auth/refresh-tokens:
+ *   post:
+ *     summary: Refresh auth tokens
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ */
+
 router.use(authRateLimiter);
 
 router.get(
