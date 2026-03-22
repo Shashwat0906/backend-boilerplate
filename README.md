@@ -42,6 +42,11 @@ cat storage/jwtRS256.key.pub | base64 # edit JWT_ACCESS_TOKEN_SECRET_PUBLIC in .
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 
+## Live API
+
+The API is deployed and accessible at **[https://backend-noqd.onrender.com](https://backend-noqd.onrender.com)**.  
+You can explore the automatically generated interactive Swagger documentation at **[https://backend-noqd.onrender.com/api-docs](https://backend-noqd.onrender.com/api-docs)**.
+
 ## Commands
 
 Running in development:

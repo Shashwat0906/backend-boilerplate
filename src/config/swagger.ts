@@ -18,7 +18,7 @@ const swaggerDefinition = {
       description: 'Development Server',
     },
     {
-      url: 'https://your-production-url.com',
+      url: 'https://backend-noqd.onrender.com',
       description: 'Production Server',
     },
   ],
